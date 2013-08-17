@@ -93,6 +93,16 @@ class Map():
         max_x, max_y = self.max_x, self.max_y
         draw = self.draw
 
+        green = []
+        try:
+            for point, state in self.json['fields'].iteritems():
+                if state['defaultState'] == 'on':
+                    x, y = point.split(',')
+                    green.append((int(x), int(y)))
+        except KeyError:
+            pass
+
+
         for i in range(max_x):
             for j in range(max_y):
                 try:
@@ -127,6 +137,12 @@ class Map():
                     elif color == colormap['tile']:
                         a, b = 2, 2
                         draw((a, b), (i, j), tiles, preview)
+                    elif color == colormap['gate']:
+                        if (i, j) in green:
+                            a, b = 10, 2
+                        else:
+                            a, b = 10, 1
+                        draw((a, b), (i, j), tiles, preview)
                 except KeyError:
                     print "make this an error mkay"
 
@@ -159,15 +175,6 @@ class Map():
         max_x, max_y = self.max_x, self.max_y
         draw = self.draw
         png = self.png
-
-        green = []
-        try:
-            for point, state in self.json['fields'].iteritems():
-                if state['defaultState'] == 'on':
-                    x, y = point.split(',')
-                    green.append((int(x), int(y)))
-        except KeyError:
-            pass
 
         for i in range(max_x):
             for j in range(max_y):
@@ -253,12 +260,6 @@ class Map():
                     elif color == colormap['redflag']:
                         a, b = 8, 0
                         draw((a, b), (i, j), tiles, preview, drawBackground=False)
-                    elif color == colormap['gate']:
-                        if (i, j) in green:
-                            a, b = 10, 2
-                        else:
-                            a, b = 10, 1
-                        draw((a, b), (i, j), tiles, preview)
                 except KeyError:
                     print "make this an error mkay"
 
