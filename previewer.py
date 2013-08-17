@@ -4,9 +4,7 @@ from __future__ import division
 import json
 import sys
 from PIL import Image, ImageDraw
-# FIXME: wtf are you importing both StringIO.  Dummy.
 import urllib, cStringIO
-import StringIO
 
 
 TILESIZE = 40
@@ -290,7 +288,7 @@ class Map():
         self._draw_rest()
 
         #preview.resize((preview.size[0]//10, preview.size[1]//10)).save('temp.png')
-        temp = StringIO.StringIO()
+        temp = cStringIO.StringIO()
         self.preview.save(temp, 'PNG')
         return temp
 
