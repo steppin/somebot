@@ -84,7 +84,7 @@ class Map():
         im = source.crop((x, y, x + TILESIZE, y + TILESIZE))
         preview.paste(im, (i * TILESIZE, j * TILESIZE), im)
 
-    def _draw_tiles(self):
+    def _draw_under(self):
         speedpad = self.speedpad
         tiles = self.tiles
         preview = self.preview
@@ -166,7 +166,7 @@ class Map():
             elif t == 2:
                 bluesplat.paste_onto(im, (x, y))
 
-    def _draw_rest(self):
+    def _draw_over(self):
         speedpad = self.speedpad
         tiles = self.tiles
         preview = self.preview
@@ -267,10 +267,10 @@ class Map():
         self.max_x, self.max_y = max_x, max_y = self.png.size
         self.preview = Image.new('RGBA', (max_x * TILESIZE, max_y * TILESIZE))
 
-        self._draw_tiles()
+        self._draw_under()
         if splats:
             self._draw_splats(splats)
-        self._draw_rest()
+        self._draw_over()
 
         #preview.resize((preview.size[0]//10, preview.size[1]//10)).save('temp.png')
         temp = cStringIO.StringIO()
