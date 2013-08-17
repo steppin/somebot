@@ -158,7 +158,7 @@ class Map():
         bluemask = Image.merge("L", (a,))
 
         for splat in s:
-            (x, y) = (splat['x']-10, splat['y']-10)
+            (x, y) = (splat['x']+10, splat['y']+10)
             t = splat['t']
             if t == 1:
                 im.paste(redsplats, (x, y), redmask)
