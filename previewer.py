@@ -17,6 +17,21 @@ def usage():
     print 'Usage: {} PNG JSON [SPLATS]'.format(sys.argv[0])
 
 
+class Splat():
+    def __init__(self, color, radius):
+        width = height = radius * 2 + 1
+        splat = Image.new("RGBA", (width, height))
+        c = ImageDraw.ImageDraw(splat, "RGBA")
+        (x, y) = (radius,) * 2
+        c.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color)
+        r, g, b, a = splat.split()
+        self.splat = Image.merge("RGB", (r, g, b))
+        self.mask = Image.merge("L", (a,))
+
+    def paste_onto(self, im, coords):
+        im.paste(self.splat, coords, self.mask)
+
+
 class Map():
     """A preview generator for tagpro."""
 
@@ -115,38 +130,25 @@ class Map():
                 except KeyError:
                     print "make this an error mkay"
 
-    def _draw_splats(self, splats):
+    def _draw_splats(self, splatfile):
         im = self.preview
-        with open(splats) as f:
-            s = json.load(f)
-        #draw = ImageDraw.Draw(self.preview)
+        with open(splatfile) as f:
+            splats = json.load(f)
         radius = 10
         opacity = 64
         color = {2: (0, 0, 255, opacity), 1: (255, 0, 0, opacity)}
+        shift = 10
 
-        redsplats = Image.new("RGBA", (21, 21))
-        c = ImageDraw.ImageDraw(redsplats, "RGBA")
-        x, y = 10, 10
-        c.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color[1])
-        r, g, b, a = redsplats.split()
-        redsplats = Image.merge("RGB", (r, g, b))
-        redmask = Image.merge("L", (a,))
+        redsplat = Splat(color[1], radius)
+        bluesplat = Splat(color[2], radius)
 
-        bluesplats = Image.new("RGBA", (21, 21))
-        c = ImageDraw.ImageDraw(bluesplats, "RGBA")
-        x, y = 10, 10
-        c.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color[2])
-        r, g, b, a = bluesplats.split()
-        bluesplats = Image.merge("RGB", (r, g, b))
-        bluemask = Image.merge("L", (a,))
-
-        for splat in s:
-            (x, y) = (splat['x'] + 10, splat['y'] + 10)
+        for splat in splats:
+            (x, y) = (splat['x'] + shift, splat['y'] + shift)
             t = splat['t']
             if t == 1:
-                im.paste(redsplats, (x, y), redmask)
+                redsplat.paste_onto(im, (x, y))
             elif t == 2:
-                im.paste(bluesplats, (x, y), bluemask)
+                bluesplat.paste_onto(im, (x, y))
 
     def _draw_rest(self):
         speedpad = self.speedpad
