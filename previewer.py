@@ -102,7 +102,6 @@ class Map():
         except KeyError:
             pass
 
-
         for i in range(max_x):
             for j in range(max_y):
                 try:
@@ -290,9 +289,7 @@ def main():
     map_ = Map(pngpath, jsonpath)
     preview = map_.preview(splats=splats)
 
-    print "saving..."
-    with open('temp.png', 'w') as f:
-        f.write(preview.getvalue())
+    sys.stdout.write(preview.getvalue())
 
 
 if '__main__' == __name__:
