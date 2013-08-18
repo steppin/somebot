@@ -275,7 +275,7 @@ def main():
 
     preview = Image.open(map_prev_file)
     size = preview.size
-    pts = [(p['x'] + shift, p['y'] + shift) for p in splats]
+    pts = [(p['x'] + shift, (size[1] - (p['y'] + shift))) for p in splats]
 
     hm = heatmap.Heatmap()
     img = hm.heatmap(pts, dotsize=200, size=size, scheme='classic', area=((0, 0), size))
